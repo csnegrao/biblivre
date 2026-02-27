@@ -16,34 +16,80 @@
 </layout:head>
 
 <layout:body>
-	<% 	
+	<%
 	ExtendedRequest req = (ExtendedRequest) request;
-	
+
 	if (!req.isGlobalSchema()) {
+		LoginDTO login = (LoginDTO) session.getAttribute(request.getAttribute("schema") + ".logged_user");
+		pageContext.setAttribute("login", login);
+
+		if (login != null) {
+			pageContext.setAttribute("name", login.getFirstName());
+		}
 	%>
-		<div class="picture">
-			<img src="static/images/main_picture_1.jpg"/>
+
+		<!-- EducaMar Hero Section -->
+		<div class="edumar-hero">
+			<div class="edumar-badge">&#127754; EducaMar &mdash; Biblioteca Digital</div>
+
+			<div class="edumar-hero-content">
+				<div class="edumar-hero-text">
+					<h1>Mergulhe no <span class="edumar-highlight">Mar do Conhecimento</span></h1>
+
+					<c:choose>
+						<c:when test="${empty login}">
+							<p>Acesse o acervo digital da nossa biblioteca e explore um universo de recursos educacionais e culturais ao alcance de um clique.</p>
+							<div class="edumar-cta-buttons">
+								<a href="?action=search_bibliographic" class="edumar-btn-primary">&#128269; Pesquisar Acervo</a>
+								<a href="javascript:void(0)" onclick="Core.submitForm('login', 'login', 'jsp');" class="edumar-btn-outline">Fazer Login</a>
+							</div>
+						</c:when>
+						<c:otherwise>
+							<p>Bem-vindo(a), <strong>${name}</strong>! Explore o acervo, fa&ccedil;a reservas e gerencie seus empr&eacute;stimos.</p>
+							<div class="edumar-cta-buttons">
+								<a href="?action=search_bibliographic" class="edumar-btn-primary">&#128269; Pesquisar Acervo</a>
+							</div>
+						</c:otherwise>
+					</c:choose>
+
+					<div class="edumar-stats">
+						<span class="edumar-stat"><span class="edumar-stat-check">&#10003;</span> Acesso Gratuito</span>
+						<span class="edumar-stat"><span class="edumar-stat-check">&#10003;</span> Cat&aacute;logo Digital</span>
+						<span class="edumar-stat"><span class="edumar-stat-check">&#10003;</span> F&aacute;cil de Usar</span>
+					</div>
+				</div>
+
+				<div class="edumar-hero-image">
+					<img src="static/images/main_picture_1.jpg" alt="Biblioteca EducaMar"/>
+				</div>
+			</div>
 		</div>
 
-		<div class="text">
-			<%
-				LoginDTO login = (LoginDTO) session.getAttribute(request.getAttribute("schema") + ".logged_user");
-				pageContext.setAttribute("login", login);
-	
-				if (login != null) {
-					pageContext.setAttribute("name", login.getFirstName());
-				}
-			%>
-	
-			<c:choose>
-				<c:when test="${empty login}">
-					<i18n:text key="text.main.logged_out" />
-				</c:when>
-				<c:otherwise>
-					<i18n:text key="text.main.logged_in" param1="${name}" />
-				</c:otherwise>
-			</c:choose>
+		<!-- Features Section -->
+		<div class="edumar-features">
+			<h2 class="edumar-features-title">O que voc&ecirc; pode fazer</h2>
+
+			<div class="edumar-cards">
+				<div class="edumar-card">
+					<span class="edumar-card-icon">&#128218;</span>
+					<div class="edumar-card-title">Pesquisa Bibliogr&aacute;fica</div>
+					<p class="edumar-card-text">Busque livros, artigos e documentos em nosso cat&aacute;logo completo e atualizado.</p>
+				</div>
+
+				<div class="edumar-card">
+					<span class="edumar-card-icon">&#128260;</span>
+					<div class="edumar-card-title">Empr&eacute;stimos e Reservas</div>
+					<p class="edumar-card-text">Gerencie seus empr&eacute;stimos, fa&ccedil;a reservas e acompanhe seu hist&oacute;rico de leituras.</p>
+				</div>
+
+				<div class="edumar-card">
+					<span class="edumar-card-icon">&#127758;</span>
+					<div class="edumar-card-title">Acesso Digital</div>
+					<p class="edumar-card-text">Acesse recursos digitais, m&iacute;dias e materiais educativos de qualquer lugar.</p>
+				</div>
+			</div>
 		</div>
+
 	<%
 	} else {
 	%>
@@ -57,9 +103,9 @@
 						<div class="subtitle"><%= Configurations.getHtml(schema.getSchema(), Constants.CONFIG_SUBTITLE) %></div>
 					</div>
 				<% } %>
-			</fieldset>	
+			</fieldset>
 		</div>
 	<%
-	}	
+	}
 	%>
 </layout:body>
